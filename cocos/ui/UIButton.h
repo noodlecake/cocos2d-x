@@ -391,6 +391,7 @@ private:
 
     int _fontSize;
     FontType _type;
+    float _bmfontScale;
     std::string _fontName;
 };
 

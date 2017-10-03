@@ -482,8 +482,9 @@ void Button::onPressStateChangedToNormal()
                 }
                 else
                 {
-                    _titleRenderer->setScaleX(1.0f);
-                    _titleRenderer->setScaleY(1.0f);
+                    float s = _type == FontType::BMFONT ? _bmfontScale : 1.0;
+                    _titleRenderer->setScaleX(s);
+                    _titleRenderer->setScaleY(s);
                 }
             }
         }
@@ -496,8 +497,9 @@ void Button::onPressStateChangedToNormal()
         if (nullptr != _titleRenderer)
         {
             _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f);
-            _titleRenderer->setScaleY(1.0f);
+            float s = _type == FontType::BMFONT ? _bmfontScale : 1.0;
+            _titleRenderer->setScaleX(s);
+            _titleRenderer->setScaleY(s);
         }
 
     }
@@ -529,8 +531,9 @@ void Button::onPressStateChangedToPressed()
             if (nullptr != _titleRenderer)
             {
                 _titleRenderer->stopAllActions();
+                float s = _type == FontType::BMFONT ? _bmfontScale : 1.0;
                 Action *zoomTitleAction = ScaleTo::create(ZOOM_ACTION_TIME_STEP,
-                                                          1.0f + _zoomScale, 1.0f + _zoomScale);
+                                                          s + _zoomScale*s, s + _zoomScale*s);
                 _titleRenderer->runAction(zoomTitleAction);
             }
         }
@@ -547,8 +550,9 @@ void Button::onPressStateChangedToPressed()
         if (nullptr != _titleRenderer)
         {
             _titleRenderer->stopAllActions();
-            _titleRenderer->setScaleX(1.0f + _zoomScale);
-            _titleRenderer->setScaleY(1.0f + _zoomScale);
+            float s = _type == FontType::BMFONT ? _bmfontScale : 1.0;
+            _titleRenderer->setScaleX(s + _zoomScale*s);
+            _titleRenderer->setScaleY(s + _zoomScale*s);
         }
     }
 }
@@ -728,7 +732,7 @@ void Button::setTitleText(const std::string& text)
         this->createTitleRenderer();
     }
     _titleRenderer->setString(text);
-    this->setTitleFontSize(_fontSize);
+    this->setTitleFontSize(_type == FontType::BMFONT ? _bmfontScale : _fontSize);
     updateContentSize();
     updateTitleLocation();
 }
@@ -778,6 +782,12 @@ void Button::setTitleFontSize(float size)
         config.fontSize = _fontSize;
         _titleRenderer->setTTFConfig(config);
     }
+    else if (_type == FontType::BMFONT)
+    {
+        _bmfontScale = size;
+        _titleRenderer->setScale(_bmfontScale);
+    }
+    
     //we can't change font size of BMFont.
     if(FontType::BMFONT != _type)
     {
@@ -915,6 +925,7 @@ void Button::copySpecialProperties(Widget *widget)
             setTitleFontName(button->getTitleFontName());
             setTitleFontSize(button->getTitleFontSize());
             setTitleColor(button->getTitleColor());
+            _bmfontScale = button->_bmfontScale;
         }
         setPressedActionEnabled(button->_pressedActionEnabled);
         setZoomScale(button->_zoomScale);
@@ -926,7 +937,7 @@ Size Button::getNormalSize() const
     Size titleSize;
     if (_titleRenderer != nullptr)
     {
-        titleSize = _titleRenderer->getContentSize();
+        titleSize = _titleRenderer->getContentSize()*_titleRenderer->getScale();
     }
     Size imageSize;
     if (_buttonNormalRenderer != nullptr)
