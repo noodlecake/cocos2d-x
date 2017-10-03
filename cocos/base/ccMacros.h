@@ -296,7 +296,8 @@ CC_ASSERT(__gl_error_code == GL_NO_ERROR, "Error"); \
   #endif
 #else
   #include <sys/param.h>
-  #if defined(__BYTE_ORDER) && __BYTE_ORDER == __LITTLE_ENDIAN
+#if ((defined(__LITTLE_ENDIAN__) && !defined(__BIG_ENDIAN__)) || \
+(defined(__BYTE_ORDER) && __BYTE_ORDER == __LITTLE_ENDIAN))
     #define CC_LITTLE_ENDIAN 1
   #else
     #define CC_LITTLE_ENDIAN 0
