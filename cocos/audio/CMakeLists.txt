@@ -22,6 +22,7 @@ ELSEIF(ANDROID)
         audio/android/AudioEngine-inl.cpp
         audio/android/ccdandroidUtils.cpp
         audio/android/cddSimpleAudioEngine.cpp
+        audio/android/utils/Utils.cpp
         audio/android/jni/cddandroidAndroidJavaEngine.cpp
     )
 
