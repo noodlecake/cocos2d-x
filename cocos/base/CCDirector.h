@@ -31,6 +31,7 @@ THE SOFTWARE.
 #include <stack>
 #include <thread>
 #include <chrono>
+#include <functional>
 
 #include "platform/CCPlatformMacros.h"
 #include "base/CCRef.h"
@@ -576,6 +577,11 @@ public:
      * returns whether or not the Director is in a valid state
      */
     bool isValid() const { return !_invalid; }
+    
+    /**
+     * Sets a callback function thats run at the start of every director main loop
+     */
+    void SetCallbackFunc(std::function<void()> func) { _callback_hook = func; }
 
 protected:
     void reset();
@@ -712,6 +718,9 @@ protected:
 
     /* whether or not the director is in a valid state */
     bool _invalid;
+    
+    /* Callback func, when if set is called at the start of every main loop */
+    std::function<void()> _callback_hook;
 
     // GLView will recreate stats labels to fit visible rect
     friend class GLView;
