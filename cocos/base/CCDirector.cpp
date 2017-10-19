@@ -1,4 +1,4 @@
-﻿/****************************************************************************
+/****************************************************************************
 Copyright (c) 2008-2010 Ricardo Quesada
 Copyright (c) 2010-2013 cocos2d-x.org
 Copyright (c) 2011      Zynga Inc.
@@ -1483,6 +1483,10 @@ void Director::startAnimation(SetIntervalReason reason)
 
 void Director::mainLoop()
 {
+    if(_callback_hook)
+    {
+        _callback_hook();
+    }
     if (_purgeDirectorInNextLoop)
     {
         _purgeDirectorInNextLoop = false;
