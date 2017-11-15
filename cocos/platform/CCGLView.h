@@ -28,6 +28,7 @@ THE SOFTWARE.
 
 #include "base/ccTypes.h"
 #include "base/CCEventTouch.h"
+#include "ui/CocosGUI.h"
 
 #include <vector>
 
@@ -213,6 +214,8 @@ public:
      * @return Returns whether or not the view is in Retina Display mode.
      */
     virtual bool isRetinaDisplay() const { return false; }
+    
+    virtual ui::Margin getSafeAreaInsets() const { return ui::Margin::ZERO; }
  
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_IOS)
     virtual void* getEAGLView() const { return nullptr; }
