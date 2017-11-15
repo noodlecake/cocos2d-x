@@ -65,6 +65,8 @@ public:
 
     /** returns whether or not the view is in Retina Display mode */
     virtual bool isRetinaDisplay() const override { return getContentScaleFactor() == 2.0; }
+    
+    virtual ui::Margin getSafeAreaInsets() const override;
 
     /** returns the objective-c CCEAGLView instance */
     virtual void* getEAGLView() const override { return _eaglview; }

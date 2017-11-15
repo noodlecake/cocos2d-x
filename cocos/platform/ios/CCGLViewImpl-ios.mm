@@ -82,6 +82,15 @@ GLViewImpl* GLViewImpl::createWithFullScreen(const std::string& viewName)
     return nullptr;
 }
 
+ui::Margin GLViewImpl::getSafeAreaInsets() const {
+    if (@available(iOS 11.0, *)) {
+        UIEdgeInsets insets = [UIApplication sharedApplication].keyWindow.safeAreaInsets;
+        auto sf = getContentScaleFactor();
+        return ui::Margin(insets.left*sf, insets.top*sf, insets.right*sf, insets.bottom*sf);
+    }
+    return ui::Margin::ZERO;
+}
+
 void GLViewImpl::convertAttrs()
 {
     if(_glContextAttrs.redBits==8 && _glContextAttrs.greenBits==8 && _glContextAttrs.blueBits==8 && _glContextAttrs.alphaBits==8)
