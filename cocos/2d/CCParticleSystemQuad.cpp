@@ -310,6 +310,14 @@ void ParticleSystemQuad::updateParticleQuads()
     {
         currentPosition = this->convertToWorldSpace(Vec2::ZERO);
     }
+    else if (_positionType == PositionType::RELATIVE_TO_NODE)
+    {
+        currentPosition = _relativeToNodeNode->convertToNodeSpace(this->convertToWorldSpace(Vec2::ZERO));
+    }
+    else if (_positionType == PositionType::FREE_INSIDE_NODE)
+    {
+        currentPosition = _relativeToNodeNode->convertToNodeSpace(this->convertToWorldSpace(Vec2::ZERO));
+    }
     else if (_positionType == PositionType::RELATIVE)
     {
         currentPosition = _position;
@@ -366,10 +374,70 @@ void ParticleSystemQuad::updateParticleQuads()
         for (int i = 0 ; i < _particleCount; ++i, ++startX, ++startY, ++x, ++y, ++quadStart, ++s, ++r)
         {
             newPos.set(*x, *y);
-            newPos.x = *x - (currentPosition.x - *startX);
-            newPos.y = *y - (currentPosition.y - *startY);
-            newPos += pos;
+            if (_positionType == PositionType::RELATIVE_TO_NODE) {
+                newPos += this->convertToNodeSpace(_relativeToNodeNode->convertToWorldSpace(Vec2(startX,startY)));
+            } else {
+                newPos.x = *x - (currentPosition.x - *startX);
+                newPos.y = *y - (currentPosition.y - *startY);
+                newPos += pos;
+            }
             updatePosWithParticle(quadStart, newPos, *s, *r);
+        }
+    }
+    else if(_positionType == PositionType::RELATIVE_TO_NODE )
+    {
+        Vec3 newPos;
+        Vec3 startPos;
+        float* startX = _particleData.startPosX;
+        float* startY = _particleData.startPosY;
+        float* x = _particleData.posx;
+        float* y = _particleData.posy;
+        float* s = _particleData.size;
+        float* r = _particleData.rotation;
+        V3F_C4B_T2F_Quad* quadStart = startQuad;
+        Mat4 relativeToNodeNodeNodeToWorldTM = _relativeToNodeNode->getNodeToWorldTransform();
+        Mat4 worldToNodeTM = this->getWorldToNodeTransform();
+        for (int i = 0 ; i < _particleCount; ++i, ++startX, ++startY, ++x, ++y, ++quadStart, ++s, ++r)
+        {
+            newPos.set(*startX + *x, *startY + *y, 0);
+            relativeToNodeNodeNodeToWorldTM.transformPoint(&newPos);
+            worldToNodeTM.transformPoint(&newPos);
+            updatePosWithParticle(quadStart, Vec2(newPos.x,newPos.y), *s, *r);
+        }
+    }
+    else if(_positionType == PositionType::FREE_INSIDE_NODE)
+    {
+        Mat4 attachmentToWorldTM = _relativeToNodeNode->getNodeToWorldTransform();
+        Mat4 worldToNodeTM = getWorldToNodeTransform();
+        Mat4 attachmentToNodeTM = attachmentToWorldTM * worldToNodeTM;
+        
+        Vec3 p1(currentPosition.x, currentPosition.y, 0);
+        attachmentToNodeTM.transformPoint(&p1);
+        
+        Vec3 p2;
+        Vec3 newPos;
+        float* startX = _particleData.startPosX;
+        float* startY = _particleData.startPosY;
+        float* startRotation = _particleData.startRotation;
+        float* x = _particleData.posx;
+        float* y = _particleData.posy;
+        float* s = _particleData.size;
+        float* r = _particleData.rotation;
+        V3F_C4B_T2F_Quad* quadStart = startQuad;
+        Mat4 baseTM = attachmentToNodeTM;
+//        Quaternion unrot;
+//        baseTM.getRotation(&unrot);
+//        unrot.inverse();
+//        baseTM.rotate(unrot);
+        for (int i = 0 ; i < _particleCount; ++i, ++startX, ++startY, ++startRotation, ++x, ++y, ++quadStart, ++s, ++r)
+        {
+            Mat4 sTM = attachmentToNodeTM;
+//            sTM.translate(-*startX, -*startY, 0);
+//            sTM *= worldToNodeTM;
+            
+            newPos.set(*x + pos.x - *startX, *y + pos.y - *startY, 0);
+            sTM.transformPoint(&newPos);
+            updatePosWithParticle(quadStart, Vec2(newPos.x,newPos.y), *s, *r);
         }
     }
     else

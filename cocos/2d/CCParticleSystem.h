@@ -57,6 +57,7 @@ public:
     float* posy;
     float* startPosX;
     float* startPosY;
+    float* startRotation;
 
     float* colorR;
     float* colorG;
@@ -103,6 +104,7 @@ public:
         posy[p1] = posy[p2];
         startPosX[p1] = startPosX[p2];
         startPosY[p1] = startPosY[p2];
+        startRotation[p1] = startRotation[p2];
         
         colorR[p1] = colorR[p2];
         colorG[p1] = colorG[p2];
@@ -218,6 +220,10 @@ public:
                    Use case: Attach an emitter to an sprite, and you want that the emitter follows the sprite.*/
         
         GROUPED, /** Living particles are attached to the emitter and are translated along with it. */
+        
+        RELATIVE_TO_NODE, /** Living particles are attached to the node that is passed in when setting this positiontype */
+        
+        FREE_INSIDE_NODE, /** Living particles move as if they are attached to the node that is passed in when setting this positiontype */
 
     };
     
@@ -743,7 +749,7 @@ public:
      *
      * @param type The particles movement type.
      */
-    void setPositionType(PositionType type) { _positionType = type; }
+    void setPositionType(PositionType type, Node* relativeToNodeNode = nullptr) { _positionType = type; _relativeToNodeNode = relativeToNodeNode; }
     
     // Overrides
     virtual void onEnter() override;
@@ -984,6 +990,7 @@ protected:
      @since v0.8
      */
     PositionType _positionType;
+    Node* _relativeToNodeNode{nullptr};
     
     /** is the emitter paused */
     bool _paused;
