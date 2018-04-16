@@ -121,7 +121,6 @@ bool ParticleData::init(int count)
     posy= (float*)malloc(count * sizeof(float));
     startPosX= (float*)malloc(count * sizeof(float));
     startPosY= (float*)malloc(count * sizeof(float));
-    startRotation= (float*)malloc(count * sizeof(float));
     colorR= (float*)malloc(count * sizeof(float));
     colorG= (float*)malloc(count * sizeof(float));
     colorB= (float*)malloc(count * sizeof(float));
@@ -147,7 +146,7 @@ bool ParticleData::init(int count)
     modeB.deltaRadius= (float*)malloc(count * sizeof(float));
     modeB.radius= (float*)malloc(count * sizeof(float));
     
-    return posx && posy && startPosY && startPosX && startRotation && colorR && colorG && colorB && colorA &&
+    return posx && posy && startPosY && startPosX && colorR && colorG && colorB && colorA &&
     deltaColorR && deltaColorG && deltaColorB && deltaColorA && size && deltaSize &&
     rotation && deltaRotation && timeToLive && atlasIndex && modeA.dirX && modeA.dirY &&
     modeA.radialAccel && modeA.tangentialAccel && modeB.angle && modeB.degreesPerSecond &&
@@ -160,7 +159,6 @@ void ParticleData::release()
     CC_SAFE_FREE(posy);
     CC_SAFE_FREE(startPosX);
     CC_SAFE_FREE(startPosY);
-    CC_SAFE_FREE(startRotation);
     CC_SAFE_FREE(colorR);
     CC_SAFE_FREE(colorG);
     CC_SAFE_FREE(colorB);
@@ -701,26 +699,13 @@ dc[i] = (dc[i] - c[i]) / _particleData.timeToLive[i];\
     
     // position
     Vec2 pos;
-    float rot = 0;
     if (_positionType == PositionType::FREE)
     {
         pos = this->convertToWorldSpace(Vec2::ZERO);
-        rot = 0;
     }
-    if (_positionType == PositionType::RELATIVE_TO_NODE)
+    if (_positionType == PositionType::FREE_IN_PARENT)
     {
-        pos = _relativeToNodeNode->convertToNodeSpace(this->convertToWorldSpace(Vec2::ZERO));
-    }
-    if (_positionType == PositionType::FREE_INSIDE_NODE)
-    {
-        pos = _relativeToNodeNode->convertToNodeSpace(this->convertToWorldSpace(Vec2::ZERO));
-        Quaternion emitterToWorldQuat;
-        this->getNodeToWorldTransform().getRotation(&emitterToWorldQuat);
-        Quaternion worldToNodeQuat;
-        _relativeToNodeNode->getWorldToNodeTransform().getRotation(&worldToNodeQuat);
-        Vec3 axis;
-        rot = (emitterToWorldQuat * worldToNodeQuat).toAxisAngle(&axis) * axis.z;
-//        rot = CC_RADIANS_TO_DEGREES(rot);
+        pos = _position;
     }
     else if (_positionType == PositionType::RELATIVE)
     {
@@ -730,7 +715,6 @@ dc[i] = (dc[i] - c[i]) / _particleData.timeToLive[i];\
     {
         _particleData.startPosX[i] = pos.x;
         _particleData.startPosY[i] = pos.y;
-        _particleData.startRotation[i] = rot;
     }
     
     // Mode Gravity: A
