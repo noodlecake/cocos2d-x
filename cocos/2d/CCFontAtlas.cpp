@@ -38,8 +38,8 @@
 
 NS_CC_BEGIN
 
-const int FontAtlas::CacheTextureWidth = 512;
-const int FontAtlas::CacheTextureHeight = 512;
+const int FontAtlas::CacheTextureWidth = 1024;
+const int FontAtlas::CacheTextureHeight = 1024;
 const char* FontAtlas::CMD_PURGE_FONTATLAS = "__cc_PURGE_FONTATLAS";
 const char* FontAtlas::CMD_RESET_FONTATLAS = "__cc_RESET_FONTATLAS";
 
