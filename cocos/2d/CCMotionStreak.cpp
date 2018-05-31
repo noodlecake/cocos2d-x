@@ -362,7 +362,7 @@ void MotionStreak::update(float delta)
 
     // Updated Tex Coords only if they are different than previous step
     if( _nuPoints  && _previousNuPoints != _nuPoints ) {
-        float texDelta = 1.0f / _nuPoints;
+        float texDelta = 1.0f;// / _nuPoints;
         for( i=0; i < _nuPoints; i++ ) {
             _texCoords[i*2] = Tex2F(0, texDelta*i);
             _texCoords[i*2+1] = Tex2F(1, texDelta*i);
