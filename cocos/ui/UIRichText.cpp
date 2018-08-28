@@ -184,6 +184,7 @@ bool RichElementImage::init(int tag, const Color3B &color, GLubyte opacity, cons
         _height = -1;
         _url = url;
         _textureType = texType;
+        _color = color;
         return true;
     }
     return false;
@@ -1418,6 +1419,7 @@ void RichText::formatText()
                                 elementRenderer->setScaleY(elmtImage->_height / currentSize.height);
                             elementRenderer->setContentSize(Size(currentSize.width * elementRenderer->getScaleX(),
                                                                  currentSize.height * elementRenderer->getScaleY()));
+                            elementRenderer->setColor(elmtImage->_color);
                             elementRenderer->addComponent(ListenerComponent::create(elementRenderer,
                                                                                     elmtImage->_url,
                                                                                     std::bind(&RichText::openUrl, this, std::placeholders::_1)));
@@ -1468,7 +1470,7 @@ void RichText::formatText()
                     case RichElement::Type::IMAGE:
                     {
                         RichElementImage* elmtImage = static_cast<RichElementImage*>(element);
-                        handleImageRenderer(elmtImage->_filePath, elmtImage->_color, elmtImage->_opacity, elmtImage->_width, elmtImage->_height, elmtImage->_url);
+                        handleImageRenderer(elmtImage->_filePath, elmtImage->_textureType, elmtImage->_color, elmtImage->_opacity, elmtImage->_width, elmtImage->_height, elmtImage->_url);
                         break;
                     }
                     case RichElement::Type::CUSTOM:
@@ -1713,9 +1715,14 @@ void RichText::handleTextRenderer(const std::string& text, const std::string& fo
     }
 }
     
-void RichText::handleImageRenderer(const std::string& filePath, const Color3B &/*color*/, GLubyte /*opacity*/, int width, int height, const std::string& url)
+void RichText::handleImageRenderer(const std::string& filePath, const Widget::TextureResType& type, const Color3B &color, GLubyte /*opacity*/, int width, int height, const std::string& url)
 {
-    Sprite* imageRenderer = Sprite::create(filePath);
+    Sprite* imageRenderer = nullptr;
+    if (type == Widget::TextureResType::LOCAL) {
+        imageRenderer = Sprite::create(filePath);
+    } else {
+        imageRenderer = Sprite::createWithSpriteFrameName(filePath);
+    }
     if (imageRenderer)
     {
         auto currentSize = imageRenderer->getContentSize();
@@ -1727,6 +1734,7 @@ void RichText::handleImageRenderer(const std::string& filePath, const Color3B &/
                                              currentSize.height * imageRenderer->getScaleY()));
         imageRenderer->setScale(1.f, 1.f);
         handleCustomRenderer(imageRenderer);
+        imageRenderer->setColor(color);
         imageRenderer->addComponent(ListenerComponent::create(imageRenderer,
                                                               url,
                                                               std::bind(&RichText::openUrl, this, std::placeholders::_1)));

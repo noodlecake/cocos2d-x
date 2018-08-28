@@ -522,9 +522,9 @@ public:
     void setDefaults(const ValueMap& defaults);         /*!< set the default values */
     ValueMap getDefaults() const;                       /*!< returns the default values */
 
-    cocos2d::Color3B color3BWithString(const std::string& color);   /*!< convert a color string into a Color3B. */
-    std::string stringWithColor3B(const cocos2d::Color3B& color3b); /*!< convert a Color3B into a color string. */
-    std::string stringWithColor4B(const cocos2d::Color4B& color4b); /*!< convert a Color4B into a color string. */
+    static cocos2d::Color3B color3BWithString(const std::string& color);   /*!< convert a color string into a Color3B. */
+    static std::string stringWithColor3B(const cocos2d::Color3B& color3b); /*!< convert a Color3B into a color string. */
+    static std::string stringWithColor4B(const cocos2d::Color4B& color4b); /*!< convert a Color4B into a color string. */
 
     /**
      * @brief add a callback to own tag.
@@ -564,7 +564,7 @@ protected:
                             const Color3B& outlineColor = Color3B::WHITE, int outlineSize = -1,
                             const Color3B& shadowColor = Color3B::BLACK, const cocos2d::Size& shadowOffset = Size(2.0, -2.0), int shadowBlurRadius = 0,
                             const Color3B& glowColor = Color3B::WHITE);
-    void handleImageRenderer(const std::string& filePath, const Color3B& color, GLubyte opacity, int width, int height, const std::string& url);
+    void handleImageRenderer(const std::string& filePath, const Widget::TextureResType& type, const Color3B& color, GLubyte opacity, int width, int height, const std::string& url);
     void handleCustomRenderer(Node* renderer);
     void formarRenderers();
     void addNewLine();
