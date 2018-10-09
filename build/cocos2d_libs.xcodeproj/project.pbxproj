@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		09544ABA216D1790002051F3 /* CCMotionStreakRepeat.h in Headers */ = {isa = PBXBuildFile; fileRef = 09544AB8216D1790002051F3 /* CCMotionStreakRepeat.h */; };
+		09544ABB216D1790002051F3 /* CCMotionStreakRepeat.h in Headers */ = {isa = PBXBuildFile; fileRef = 09544AB8216D1790002051F3 /* CCMotionStreakRepeat.h */; };
+		09544ABC216D1790002051F3 /* CCMotionStreakRepeat.h in Headers */ = {isa = PBXBuildFile; fileRef = 09544AB8216D1790002051F3 /* CCMotionStreakRepeat.h */; };
+		09544ABD216D1790002051F3 /* CCMotionStreakRepeat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 09544AB9216D1790002051F3 /* CCMotionStreakRepeat.cpp */; };
+		09544ABE216D1790002051F3 /* CCMotionStreakRepeat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 09544AB9216D1790002051F3 /* CCMotionStreakRepeat.cpp */; };
+		09544ABF216D1790002051F3 /* CCMotionStreakRepeat.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 09544AB9216D1790002051F3 /* CCMotionStreakRepeat.cpp */; };
 		0C261F281BE7528900707478 /* Light3DReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C261F261BE7528900707478 /* Light3DReader.cpp */; };
 		0C261F291BE7528900707478 /* Light3DReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0C261F261BE7528900707478 /* Light3DReader.cpp */; };
 		0C261F2A1BE7528900707478 /* Light3DReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C261F271BE7528900707478 /* Light3DReader.h */; };
@@ -4428,6 +4434,8 @@
 		06CAAABF186AD63B0012A414 /* TriggerMng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriggerMng.h; sourceTree = "<group>"; };
 		06CAAAC0186AD63B0012A414 /* TriggerObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerObj.cpp; sourceTree = "<group>"; };
 		06CAAAC1186AD63B0012A414 /* TriggerObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TriggerObj.h; sourceTree = "<group>"; };
+		09544AB8216D1790002051F3 /* CCMotionStreakRepeat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCMotionStreakRepeat.h; sourceTree = "<group>"; };
+		09544AB9216D1790002051F3 /* CCMotionStreakRepeat.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCMotionStreakRepeat.cpp; sourceTree = "<group>"; };
 		0C261F261BE7528900707478 /* Light3DReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Light3DReader.cpp; sourceTree = "<group>"; };
 		0C261F271BE7528900707478 /* Light3DReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Light3DReader.h; sourceTree = "<group>"; };
 		1551A33F158F2AB200E66CFE /* libcocos2d Mac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libcocos2d Mac.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6587,6 +6595,8 @@
 				1A57020F180BCBF40088DEC7 /* CCRenderTexture.h */,
 				1A570206180BCBDF0088DEC7 /* CCMotionStreak.cpp */,
 				1A570207180BCBDF0088DEC7 /* CCMotionStreak.h */,
+				09544AB9216D1790002051F3 /* CCMotionStreakRepeat.cpp */,
+				09544AB8216D1790002051F3 /* CCMotionStreakRepeat.h */,
 				1A570200180BCBD40088DEC7 /* CCClippingNode.cpp */,
 				1A570201180BCBD40088DEC7 /* CCClippingNode.h */,
 			);
@@ -9732,6 +9742,7 @@
 				5020A1A11D49912500E80C72 /* EventData.h in Headers */,
 				B665E34C1AA80A6500DDB1C5 /* CCPUOnPositionObserver.h in Headers */,
 				5020A2011D49912500E80C72 /* SkeletonRenderer.h in Headers */,
+				09544ABA216D1790002051F3 /* CCMotionStreakRepeat.h in Headers */,
 				501216901AC47380009A4BEA /* CCRenderState.h in Headers */,
 				15AE198919AAD36A00C27E9E /* ButtonReader.h in Headers */,
 				5020A1831D49912500E80C72 /* Bone.h in Headers */,
@@ -10536,6 +10547,7 @@
 				507B40CC1C31BDD30067B53E /* CCPUDynamicAttribute.h in Headers */,
 				507B40CE1C31BDD30067B53E /* CCESRenderer-ios.h in Headers */,
 				507B40CF1C31BDD30067B53E /* CCPUObserverTranslator.h in Headers */,
+				09544ABC216D1790002051F3 /* CCMotionStreakRepeat.h in Headers */,
 				507B40D01C31BDD30067B53E /* CCEventFocus.h in Headers */,
 				507B40D11C31BDD30067B53E /* CCTransformHelp.h in Headers */,
 				507B40D31C31BDD30067B53E /* CCPUEmitterManager.h in Headers */,
@@ -11340,6 +11352,7 @@
 				B665E3191AA80A6500DDB1C5 /* CCPUObserverTranslator.h in Headers */,
 				50ABBE581925AB6F00A911A9 /* CCEventFocus.h in Headers */,
 				15AE196419AAD35100C27E9E /* CCTransformHelp.h in Headers */,
+				09544ABB216D1790002051F3 /* CCMotionStreakRepeat.h in Headers */,
 				B665E2991AA80A6500DDB1C5 /* CCPUEmitterManager.h in Headers */,
 				15AE1B9719AADAA100C27E9E /* UIVideoPlayer.h in Headers */,
 				15AE18BE19AAD33D00C27E9E /* CCLabelBMFontLoader.h in Headers */,
@@ -11828,6 +11841,7 @@
 				B665E2DA1AA80A6500DDB1C5 /* CCPUJetAffectorTranslator.cpp in Sources */,
 				1A570296180BCCAB0088DEC7 /* CCAnimationCache.cpp in Sources */,
 				50ABBE351925AB6F00A911A9 /* CCConsole.cpp in Sources */,
+				09544ABD216D1790002051F3 /* CCMotionStreakRepeat.cpp in Sources */,
 				B6DD2FED1B04825B00E47F5F /* DetourTileCache.cpp in Sources */,
 				50693C5E1B6BF2AE005C5820 /* CCDownloader.cpp in Sources */,
 				B665E3FA1AA80A6600DDB1C5 /* CCPUSphere.cpp in Sources */,
@@ -12230,6 +12244,7 @@
 				507B3A431C31BDD30067B53E /* CCPUOnClearObserver.cpp in Sources */,
 				507B3A481C31BDD30067B53E /* UITextField.cpp in Sources */,
 				507B3A491C31BDD30067B53E /* CheckBoxReader.cpp in Sources */,
+				09544ABF216D1790002051F3 /* CCMotionStreakRepeat.cpp in Sources */,
 				507B3A4A1C31BDD30067B53E /* CCPhysics3D.cpp in Sources */,
 				507B3A4B1C31BDD30067B53E /* CCEventListenerAcceleration.cpp in Sources */,
 				507B3A4C1C31BDD30067B53E /* CCPUGravityAffector.cpp in Sources */,
@@ -12892,6 +12907,7 @@
 				B665E28F1AA80A6500DDB1C5 /* CCPUDynamicAttributeTranslator.cpp in Sources */,
 				B665E31B1AA80A6500DDB1C5 /* CCPUOnClearObserver.cpp in Sources */,
 				15AE1B8419AADA9A00C27E9E /* UITextField.cpp in Sources */,
+				09544ABE216D1790002051F3 /* CCMotionStreakRepeat.cpp in Sources */,
 				5020A1811D49912500E80C72 /* Bone.c in Sources */,
 				15AE198E19AAD36E00C27E9E /* CheckBoxReader.cpp in Sources */,
 				B6CAAFE31AF9A9E100B9B856 /* CCPhysics3D.cpp in Sources */,

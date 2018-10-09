@@ -54,6 +54,7 @@
 #include "2d/CCMenu.h"
 #include "2d/CCMenuItem.h"
 #include "2d/CCMotionStreak.h"
+#include "2d/CCMotionStreakRepeat.h"
 #include "2d/CCParallaxNode.h"
 #include "2d/CCParticleBatchNode.h"
 #include "2d/CCParticleExamples.h"
@@ -793,6 +794,7 @@ CC_DEPRECATED_ATTRIBUTE typedef MenuItemToggle CCMenuItemToggle;
 CC_DEPRECATED_ATTRIBUTE typedef Menu CCMenu;
 CC_DEPRECATED_ATTRIBUTE typedef ClippingNode CCClippingNode;
 CC_DEPRECATED_ATTRIBUTE typedef MotionStreak CCMotionStreak;
+CC_DEPRECATED_ATTRIBUTE typedef MotionStreakRepeat CCMotionStreakRepeat;
 CC_DEPRECATED_ATTRIBUTE typedef ProgressTimer CCProgressTimer;
 CC_DEPRECATED_ATTRIBUTE typedef RenderTexture CCRenderTexture;
 CC_DEPRECATED_ATTRIBUTE typedef ParticleBatchNode CCParticleBatchNode;
