@@ -79,5 +79,5 @@ set(COCOS_2D_SRC
   2d/CCTransitionPageTurn.cpp
   2d/CCTransitionProgress.cpp
   2d/CCTweenFunction.cpp
-
+  2d/CCMotionStreakRepeat.cpp
 )
