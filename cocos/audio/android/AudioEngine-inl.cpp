@@ -186,7 +186,7 @@ bool AudioEngineImpl::init()
         if(SL_RESULT_SUCCESS != result){ ERRORLOG("realize the output mix fail"); break; }
         
         
-        //_audioPlayerProvider = new AudioPlayerProvider(_engineEngine, _outputMixObject, getDeviceSampleRate(), getDeviceAudioBufferSizeInFrames(), fdGetter, &__callerThreadUtils);  //TODO_FIX_NOODLECAKE
+        _audioPlayerProvider = new AudioPlayerProvider(_engineEngine, _outputMixObject, getDeviceSampleRate(), getDeviceAudioBufferSizeInFrames(), fdGetter, &__callerThreadUtils);
         
         _onPauseListener = Director::getInstance()->getEventDispatcher()->addCustomEventListener(EVENT_COME_TO_BACKGROUND, CC_CALLBACK_1(AudioEngineImpl::onEnterBackground, this));
         
@@ -204,22 +204,19 @@ void AudioEngineImpl::onEnterBackground(EventCustom* event)
     // but UrlAudioPlayers could not be paused.
     if (_audioPlayerProvider != nullptr)
     {
-        //_audioPlayerProvider->pause();  //TODO_FIX_NOODLECAKE
+        _audioPlayerProvider->pause();
     }
     
     // pause UrlAudioPlayers which are playing.
     for (auto&& e : _audioPlayers)
     {
-        //TODO_FIX_NOODLECAKE
-        /*
-         auto player = e.second;
-         if (dynamic_cast<UrlAudioPlayer*>(player) != nullptr
-         && player->getState() == IAudioPlayer::State::PLAYING)
-         {
-         _urlAudioPlayersNeedResume.emplace(e.first, player);
-         player->pause();
-         }*/
-        
+        auto player = e.second;
+        if (dynamic_cast<UrlAudioPlayer*>(player) != nullptr
+        && player->getState() == IAudioPlayer::State::PLAYING)
+        {
+        _urlAudioPlayersNeedResume.emplace(e.first, player);
+        player->pause();
+        }
     }
 }
 
@@ -229,13 +226,13 @@ void AudioEngineImpl::onEnterForeground(EventCustom* event)
     // but UrlAudioPlayers could not be resumed.
     if (_audioPlayerProvider != nullptr)
     {
-        //_audioPlayerProvider->resume();  //TODO_FIX_NOODLECAKE
+        _audioPlayerProvider->resume();
     }
     
     // resume UrlAudioPlayers
     for (auto&& iter : _urlAudioPlayersNeedResume)
     {
-        //iter.second->resume(); //TODO_FIX_NOODLECAKE
+        iter.second->resume();
     }
     _urlAudioPlayersNeedResume.clear();
 }
@@ -261,14 +258,10 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
         auto fullPath = FileUtils::getInstance()->fullPathForFilename(filePath);
         
         audioId = _audioIDIndex++;
-        
-        
-        //auto player = _audioPlayerProvider->getAudioPlayer(fullPath); //TODO_FIX_NOODLECAKE
-        //auto player = nullptr; //TODO_FIX_NOODLECAKE
-        //if (player != nullptr)
-        if(false)
+
+        auto player = _audioPlayerProvider->getAudioPlayer(fullPath);
+        if (player != nullptr)
         {
-            /*
              player->setId(audioId);
              _audioPlayers.insert(std::make_pair(audioId, player));
              
@@ -309,7 +302,6 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
              player->setVolume(volume);
              player->setAudioFocus(__currentAudioFocus == AUDIOFOCUS_GAIN);
              player->play();
-             */
         }
         else
         {
@@ -441,12 +433,12 @@ void AudioEngineImpl::preload(const std::string& filePath, const std::function<v
     if (_audioPlayerProvider != nullptr)
     {
         std::string fullPath = FileUtils::getInstance()->fullPathForFilename(filePath);
-        //_audioPlayerProvider->preloadEffect(fullPath, [callback](bool succeed, PcmData data){
-        //    if (callback != nullptr)
-        //    {
-        //        callback(succeed);
-        //    }  //TODO_FIX_NOODLECAKE
-        //});
+        _audioPlayerProvider->preloadEffect(fullPath, [callback](bool succeed, PcmData data){
+            if (callback != nullptr)
+            {
+                callback(succeed);
+            }
+        });
     }
     else
     {
@@ -462,7 +454,7 @@ void AudioEngineImpl::uncache(const std::string& filePath)
     if (_audioPlayerProvider != nullptr)
     {
         std::string fullPath = FileUtils::getInstance()->fullPathForFilename(filePath);
-        //_audioPlayerProvider->clearPcmCache(fullPath);  //TODO_FIX_NOODLECAKE
+        _audioPlayerProvider->clearPcmCache(fullPath);
     }
 }
 
@@ -470,7 +462,7 @@ void AudioEngineImpl::uncacheAll()
 {
     if (_audioPlayerProvider != nullptr)
     {
-        //_audioPlayerProvider->clearAllPcmCaches();  //TODO_FIX_NOODLECAKE
+        _audioPlayerProvider->clearAllPcmCaches();
     }
 }
 
