@@ -177,6 +177,11 @@ void Device::setKeepScreenOn(bool value)
     JniHelper::callStaticVoidMethod(helperClassName, "setKeepScreenOn", value);
 }
 
+void Device::setGainAudioFocusEnabled(bool value)
+{
+    JniHelper::callStaticVoidMethod(helperClassName, "setGainAudioFocusEnabled", value);
+}
+
 void Device::vibrate(float duration)
 {
     JniHelper::callStaticVoidMethod(helperClassName, "vibrate", duration);

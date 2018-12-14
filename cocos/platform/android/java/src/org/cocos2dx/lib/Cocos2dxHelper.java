@@ -308,6 +308,10 @@ public class Cocos2dxHelper {
         ((Cocos2dxActivity)sActivity).setKeepScreenOn(value);
     }
 
+    public static void setGainAudioFocusEnabled(boolean value) {
+        ((Cocos2dxActivity)sActivity).setEnableAudioFocusGain(value);
+    }
+
     public static void vibrate(float duration) {
         sVibrateService.vibrate((long)(duration * 1000));
     }

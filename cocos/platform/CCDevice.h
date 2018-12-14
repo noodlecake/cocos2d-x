@@ -84,6 +84,10 @@ public:
      */
     static void setKeepScreenOn(bool keepScreenOn);
 
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    static void setGainAudioFocusEnabled(bool value);
+#endif
+
     /**
      * Vibrate for the specified amount of time.
      * If vibrate is not supported, then invoking this method has no effect.
