@@ -310,9 +310,10 @@ void Director::drawScene()
     /* to avoid flickr, nextScene MUST be here: after tick and before draw.
      * FIXME: Which bug is this one. It seems that it can't be reproduced with v0.9
      */
+    Node* node_to_release = NULL;
     if (_nextScene)
     {
-        setNextScene();
+        node_to_release = setNextScene();
     }
 
     pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
@@ -353,6 +354,11 @@ void Director::drawScene()
 
     popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
 
+    
+    if(node_to_release) {
+        node_to_release->release();
+    }
+    
     _totalFrames++;
 
     // swap buffers
@@ -1195,8 +1201,9 @@ void Director::restartDirector()
 #endif
 }
 
-void Director::setNextScene()
+Node* Director::setNextScene()
 {
+    Node* return_node = NULL;
     _eventDispatcher->dispatchEvent(_beforeSetNextScene);
 
     bool runningIsTransition = dynamic_cast<TransitionScene*>(_runningScene) != nullptr;
@@ -1221,7 +1228,8 @@ void Director::setNextScene()
 
     if (_runningScene)
     {
-        _runningScene->release();
+        return_node = _runningScene;
+        //_runningScene->release();
     }
     _runningScene = _nextScene;
     _nextScene->retain();
@@ -1234,6 +1242,7 @@ void Director::setNextScene()
     }
     
     _eventDispatcher->dispatchEvent(_afterSetNextScene);
+    return return_node;
 }
 
 void Director::pause()

@@ -602,7 +602,7 @@ protected:
     void restartDirector();
     bool _restartDirectorInNextLoop; // this flag will be set to true in restart()
     
-    void setNextScene();
+    Node* setNextScene();
     
     void updateFrameRate();
 #if !CC_STRIP_FPS
