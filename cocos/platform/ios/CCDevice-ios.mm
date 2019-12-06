@@ -608,7 +608,7 @@ void Device::vibrate(float duration)
     // should vibrate no matter it is silient or not
     if([[UIDevice currentDevice].model isEqualToString:@"iPhone"])
     {
-        AudioServicesPlaySystemSound (1352); //works ALWAYS as of this post
+        AudioServicesPlaySystemSound (1519); //works ALWAYS as of this post
     }
     else
     {
