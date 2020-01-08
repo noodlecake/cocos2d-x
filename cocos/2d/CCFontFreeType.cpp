@@ -115,7 +115,7 @@ FontFreeType::FontFreeType(bool distanceFieldEnabled /* = false */, float outlin
         FT_Stroker_Set(_stroker,
             (int)(_outlineSize * 64),
             FT_STROKER_LINECAP_ROUND,
-            FT_STROKER_LINEJOIN_ROUND,
+            FT_STROKER_LINEJOIN_MITER_VARIABLE,
             0);
     }
 }
