@@ -293,6 +293,19 @@ namespace cocos2d {
         return ret;
     }
 
+    jobjectArray JniHelper::convert(LocalRefMapType& localRefs, cocos2d::JniMethodInfo& t, const std::vector<std::string>& x) {
+        jobjectArray ret = (jobjectArray) t.env->NewObjectArray(x.size(), t.env->FindClass("java/lang/String"), t.env->NewStringUTF(""));
+        int i = 0;
+        for(auto& str : x) {
+            const char* tmp_string = str.c_str();
+            jstring new_java_string = cocos2d::StringUtils::newStringUTFJNI(t.env, tmp_string ? tmp_string : "");
+            t.env->SetObjectArrayElement(ret,i,new_java_string);
+            i++;
+        }
+        localRefs[t.env].push_back(ret);
+        return ret;
+    }
+
     jstring JniHelper::convert(LocalRefMapType& localRefs, cocos2d::JniMethodInfo& t, const std::string& x) {
         return convert(localRefs, t, x.c_str());
     }

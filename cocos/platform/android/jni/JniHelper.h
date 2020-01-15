@@ -281,6 +281,8 @@ private:
 
     static jstring convert(LocalRefMapType& localRefs, cocos2d::JniMethodInfo& t, const std::string& x);
 
+    static jobjectArray convert(LocalRefMapType& localRefs, cocos2d::JniMethodInfo& t, const std::vector<std::string>& x);
+
     template <typename T>
     static T convert(LocalRefMapType& localRefs, cocos2d::JniMethodInfo&, T x) {
         return x;
@@ -326,6 +328,10 @@ private:
 
     static std::string getJNISignature(const std::string&) {
         return "Ljava/lang/String;";
+    }
+
+    static std::string getJNISignature(const std::vector<std::string>&) {
+        return "[Ljava/lang/String;";
     }
 
     template <typename T>
