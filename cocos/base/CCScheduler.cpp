@@ -948,7 +948,11 @@ void Scheduler::update(float dt)
         _performMutex.unlock();
         
         for (const auto &function : temp) {
-            function();
+            try {
+                function();
+            } catch (const std::exception& e) {
+                CCLOGERROR("%s", "CCScheduler functionsToPerform exception");
+            }
         }
     }
 }
