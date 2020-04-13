@@ -1146,7 +1146,11 @@ void Node::detachChild(Node *child, ssize_t childIndex, bool doCleanup)
     // set parent nil at the end
     child->setParent(nullptr);
 
-    _children.erase(childIndex);
+    // We need to comput this again....
+    
+    ssize_t index = _children.getIndex(child);
+    if( index != CC_INVALID_INDEX )
+        _children.erase(index);
 }
 
 
