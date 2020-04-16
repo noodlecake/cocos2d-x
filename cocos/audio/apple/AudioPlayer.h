@@ -64,6 +64,7 @@ protected:
 
     AudioCache* _audioCache;
 
+    float _pitch;
     float _volume;
     bool _loop;
     std::function<void (int, const std::string &)> _finishCallbak;

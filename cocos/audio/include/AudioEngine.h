@@ -131,7 +131,7 @@ public:
      *
      * @see `AudioProfile`
      */
-    static int play2d(const std::string& filePath, bool loop = false, float volume = 1.0f, const AudioProfile *profile = nullptr);
+    static int play2d(const std::string& filePath, bool loop = false, float volume = 1.0f, float pitch = 1.0f, const AudioProfile *profile = nullptr);
     
     /** 
      * Sets whether an audio instance loop or not.
@@ -157,6 +157,14 @@ public:
      */
     static void setVolume(int audioID, float volume);
 
+    /**
+     * Sets pitch for an audio instance.
+     *
+     * @param audioID An audioID returned by the play2d function.
+     * @param pitch Volume value (range from 0.5 to 2.0).
+     */
+    static void setPitch(int audioID, float pitch);
+    
     /** 
      * Gets the volume value of an audio instance.
      *
@@ -332,6 +340,7 @@ protected:
         const std::string* filePath;
         ProfileHelper* profileHelper;
         
+        float pitch;
         float volume;
         bool loop;
         float duration;

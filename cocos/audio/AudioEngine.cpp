@@ -188,7 +188,7 @@ bool AudioEngine::lazyInit()
     return true;
 }
 
-int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, const AudioProfile *profile)
+int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, float pitch, const AudioProfile *profile)
 {
     int ret = AudioEngine::INVALID_AUDIO_ID;
 
@@ -239,7 +239,14 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, co
             volume = 1.0f;
         }
         
-        ret = _audioEngineImpl->play2d(filePath, loop, volume);
+        if (pitch < 0.5f) {
+            pitch = 0.5f;
+        }
+        else if (pitch > 2.0f){
+            pitch = 2.0f;
+        }
+        
+        ret = _audioEngineImpl->play2d(filePath, loop, volume, pitch);
         if (ret != INVALID_AUDIO_ID)
         {
             _audioPathIDMap[filePath].push_back(ret);
@@ -248,6 +255,7 @@ int AudioEngine::play2d(const std::string& filePath, bool loop, float volume, co
             auto& audioRef = _audioIDInfoMap[ret];
             audioRef.volume = volume;
             audioRef.loop = loop;
+            audioRef.pitch = pitch;
             audioRef.filePath = &it->first;
 
             if (profileHelper) {
@@ -284,6 +292,24 @@ void AudioEngine::setVolume(int audioID, float volume)
         if (it->second.volume != volume){
             _audioEngineImpl->setVolume(audioID, volume);
             it->second.volume = volume;
+        }
+    }
+}
+
+void AudioEngine::setPitch(int audioID, float pitch)
+{
+    auto it = _audioIDInfoMap.find(audioID);
+    if (it != _audioIDInfoMap.end()){
+        if (pitch < 0.5f) {
+            pitch = 0.5f;
+        }
+        else if (pitch > 2.0f){
+            pitch = 2.0f;
+        }
+
+        if (it->second.pitch != pitch){
+            _audioEngineImpl->setPitch(audioID, pitch);
+            it->second.pitch = pitch;
         }
     }
 }
