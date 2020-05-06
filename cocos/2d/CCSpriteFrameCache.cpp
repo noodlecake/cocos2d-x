@@ -457,6 +457,15 @@ void SpriteFrameCache::removeSpriteFrames()
     _loadedFileNames->clear();
 }
 
+void SpriteFrameCache::retainAllLoadedSpriteFrames()
+{
+    for (auto& iter : _spriteFrames)
+    {
+        SpriteFrame* spriteFrame = iter.second;
+        spriteFrame->retain();
+    }
+}
+
 void SpriteFrameCache::removeUnusedSpriteFrames()
 {
     bool removed = false;

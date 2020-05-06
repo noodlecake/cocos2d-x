@@ -239,6 +239,8 @@ public:
     CC_DEPRECATED_ATTRIBUTE SpriteFrame* spriteFrameByName(const std::string&name) { return getSpriteFrameByName(name); }
 
     bool reloadTexture(const std::string& plist);
+    
+    void retainAllLoadedSpriteFrames();
 
 protected:
     // MARMALADE: Made this protected not private, as deriving from this class is pretty useful
