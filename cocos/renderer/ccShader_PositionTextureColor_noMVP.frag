@@ -24,7 +24,9 @@
  */
 
 const char* ccPositionTextureColor_noMVP_frag = R"(
+
 #ifdef GL_ES
+//#extension GL_OES_standard_derivatives : enable
 precision lowp float;
 #endif
 
@@ -33,6 +35,36 @@ varying vec2 v_texCoord;
 
 void main()
 {
+    vec4 sample_color = texture2D(CC_Texture0, v_texCoord);
+    
+    float alpha = sample_color.a;
+    vec3 color = sample_color.rgb;
+    
+    float alphaDx = dFdx(alpha);
+    float alphaDy = dFdy(alpha);
+    
+    vec4 sampleDy = dFdy(sample_color);
+    vec4 sampleDx = dFdx(sample_color);
+    
+    // only modify pixels with an alpha in this range
+    bool within_range = alpha > 0.05 && alpha < 0.95;
+    
+    if(within_range && abs(alphaDx) >= 0.2 && length(sampleDy) == 0.0) {
+        // dX > 0.2 && zero change in y direction
+        // (vertical lines)
+        gl_FragColor = vec4(1.0,0.0,0.0,1.0); // red to test
+        //gl_FragColor = vec4(sample_color.rgb/alpha, 1.0);
+        return;
+    }
+    else if(within_range && abs(alphaDy) >= 0.2 && length(sampleDx) == 0.0) {
+        // dY > 0.2 && zero change in x direction
+        // (horizonal lines)
+        gl_FragColor = vec4(1.0,0.0,0.0,1.0); // red to test
+        //gl_FragColor = vec4(sample_color.rgb/alpha, 1.0);
+        return;
+    }
+    
+    // default shading
     gl_FragColor = v_fragmentColor * texture2D(CC_Texture0, v_texCoord);
 }
 )";
