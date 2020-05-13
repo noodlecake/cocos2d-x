@@ -109,6 +109,12 @@ public:
      */
      void setAliasTexParameters();
 
+    void findCharacterMap(const std::u32string& u32Text, std::unordered_map<unsigned int, unsigned int>& charCodeMap);
+    
+    bool areAllCharactersAvailable(const std::u32string& u32Text);
+    
+    
+    
 protected:
     void reset();
     

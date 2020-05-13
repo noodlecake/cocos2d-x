@@ -276,6 +276,48 @@ void FontAtlas::conversionU32TOGB2312(const std::u32string& u32Text, std::unorde
     delete[] gb2312Text;
 }
 
+bool FontAtlas::areAllCharactersAvailable(const std::u32string& u32Text) {
+    std::unordered_map<unsigned int, unsigned int> codeMapOfNewChar;
+    findCharacterMap(u32Text, codeMapOfNewChar);
+    for (auto&& it : codeMapOfNewChar) {
+        auto is_char_available = _fontFreeType->isGlyphAvailable(it.second);
+        if(!is_char_available) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void FontAtlas::findCharacterMap(const std::u32string& u32Text, std::unordered_map<unsigned int, unsigned int>& charCodeMap) {
+    
+    std::u32string newChars = u32Text;
+    newChars.append(u32Text);
+    FT_Encoding charEncoding = _fontFreeType->getEncoding();
+    
+    if (!newChars.empty())
+    {
+        switch (charEncoding)
+        {
+        case FT_ENCODING_UNICODE:
+        {
+            for (auto u32Code : newChars)
+            {
+                charCodeMap[u32Code] = u32Code;
+            }
+            break;
+        }
+        case FT_ENCODING_GB2312:
+        {
+            conversionU32TOGB2312(newChars, charCodeMap);
+            break;
+        }
+        default:
+            CCLOG("FontAtlas::findNewCharacters: Unsupported encoding:%d", charEncoding);
+            break;
+        }
+    }
+}
+
 void FontAtlas::findNewCharacters(const std::u32string& u32Text, std::unordered_map<unsigned int, unsigned int>& charCodeMap)
 {
     std::u32string newChars;

@@ -213,7 +213,7 @@ Label* Label::createWithSystemFont(const std::string& text, const std::string& f
 Label* Label::createWithTTF(const std::string& text, const std::string& fontFile, float fontSize, const Size& dimensions /* = Size::ZERO */, TextHAlignment hAlignment /* = TextHAlignment::LEFT */, TextVAlignment vAlignment /* = TextVAlignment::TOP */)
 {
     auto ret = new (std::nothrow) Label(hAlignment,vAlignment);
-
+    
     if (ret && ret->initWithTTF(text, fontFile, fontSize, dimensions, hAlignment, vAlignment))
     {
         ret->autorelease();
@@ -322,8 +322,33 @@ bool Label::initWithTTF(const std::string& text,
     if (FileUtils::getInstance()->isFileExist(fontFilePath))
     {
         TTFConfig ttfConfig(fontFilePath, fontSize, GlyphCollection::DYNAMIC);
-        if (setTTFConfig(ttfConfig))
+        
+        bool swap_to_system_font = false;
+        auto config_exists = FileUtils::getInstance()->isFileExist(ttfConfig.fontFilePath);
+        auto atlas = FontAtlasCache::getFontAtlasTTF(&ttfConfig);
+        
+        std::u32string utf32String;
+        if(config_exists && StringUtils::UTF8ToUTF32(text, utf32String)) {
+            // check glyphs...
+            bool are_all_characters_available = atlas->areAllCharactersAvailable(utf32String);
+            
+            if(!are_all_characters_available) {
+                cocos2d::log("not all characters available in this TTF!  Swapping to SystemFont");
+                swap_to_system_font = true;
+            }
+        }
+        
+        
+        
+        if (!swap_to_system_font && setTTFConfig(ttfConfig))
         {
+            setDimensions(dimensions.width, dimensions.height);
+            setString(text);
+        }
+        else {
+            enableBold();
+            setSystemFontName(_systemFont); // todo actually get bold from ttconfig
+            setSystemFontSize(fontSize); // todo actually get size from ttconfig
             setDimensions(dimensions.width, dimensions.height);
             setString(text);
         }
@@ -334,9 +359,35 @@ bool Label::initWithTTF(const std::string& text,
 
 bool Label::initWithTTF(const TTFConfig& ttfConfig, const std::string& text, TextHAlignment /*hAlignment*/, int maxLineWidth)
 {
-    if (FileUtils::getInstance()->isFileExist(ttfConfig.fontFilePath) && setTTFConfig(ttfConfig))
-    {
-        setMaxLineWidth(maxLineWidth);
+    bool swap_to_system_font = false;
+    auto config_exists = FileUtils::getInstance()->isFileExist(ttfConfig.fontFilePath);
+    auto atlas = FontAtlasCache::getFontAtlasTTF(&ttfConfig);
+    
+    std::u32string utf32String;
+    if(config_exists && StringUtils::UTF8ToUTF32(text, utf32String)) {
+        // check glyphs...
+        bool are_all_characters_available = atlas->areAllCharactersAvailable(utf32String);
+        
+        if(!are_all_characters_available) {
+            cocos2d::log("not all characters available in this TTF!  Swapping to SystemFont");
+            swap_to_system_font = true;
+        }
+    }
+    
+    if(!swap_to_system_font) {
+        if (FileUtils::getInstance()->isFileExist(ttfConfig.fontFilePath) && setTTFConfig(ttfConfig))
+        {
+            setMaxLineWidth(maxLineWidth);
+            setString(text);
+            return true;
+        }
+        return false;
+    }
+    else {
+        setSystemFontName(_systemFont); // todo actually get bold from ttconfig
+        enableBold();
+        setSystemFontSize(ttfConfig.fontSize); // todo actually get size from ttconfig
+        setDimensions(0,0);
         setString(text);
         return true;
     }
@@ -478,7 +529,7 @@ void Label::reset()
     _outlineSize = 0.f;
     _bmFontPath = "";
     _systemFontDirty = false;
-    _systemFont = "Helvetica";
+    _systemFont = "Arial-BoldMT";
     _systemFontSize = 12;
 
     if (_horizontalKernings)

@@ -289,6 +289,35 @@ const char* FontFreeType::getFontFamily() const
     return _fontRef->family_name;
 }
 
+bool FontFreeType::isGlyphAvailable(uint64_t theChar) {
+    if (_fontRef == nullptr)
+        return false;
+    
+    if (_distanceFieldEnabled)
+    {
+        auto charIndex = FT_Get_Char_Index(_fontRef, theChar);
+        if(charIndex == 0) {
+            return false;
+        }
+        auto glyphLoad =  FT_Load_Glyph(_fontRef, charIndex, FT_LOAD_RENDER | FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT);
+        if (glyphLoad) {
+            return false;
+        }
+    }
+    else
+    {
+        auto charIndex = FT_Get_Char_Index(_fontRef, theChar);
+        if(charIndex == 0) {
+            return false;
+        }
+        auto glyphLoad =  FT_Load_Glyph(_fontRef, charIndex, FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT);
+        if (glyphLoad) {
+            return false;
+        }
+    }
+    return true;
+}
+
 unsigned char* FontFreeType::getGlyphBitmap(uint64_t theChar, long &outWidth, long &outHeight, Rect &outRect,int &xAdvance)
 {
     bool invalidChar = true;
@@ -301,13 +330,31 @@ unsigned char* FontFreeType::getGlyphBitmap(uint64_t theChar, long &outWidth, lo
 
         if (_distanceFieldEnabled)
         {
-            if (FT_Load_Char(_fontRef, theChar, FT_LOAD_RENDER | FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT))
+            auto charIndex = FT_Get_Char_Index(_fontRef, theChar);
+            if(charIndex == 0) {
+                // no char here yo!
+                //cocos2d::log("char index is ZERO!");
                 break;
+            }
+            auto glyphLoad =  FT_Load_Glyph(_fontRef, charIndex, FT_LOAD_RENDER | FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT);
+            if (glyphLoad)
+                break;
+            
+            //if (FT_Load_Char(_fontRef, theChar, FT_LOAD_RENDER | FT_LOAD_NO_HINTING | FT_LOAD_NO_AUTOHINT))
         }
         else
         {
-            if (FT_Load_Char(_fontRef, theChar, FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT))
+            auto charIndex = FT_Get_Char_Index(_fontRef, theChar);
+            if(charIndex == 0) {
+                // no char here yo!
+                //cocos2d::log("char index is ZERO!");
                 break;
+            }
+            auto glyphLoad =  FT_Load_Glyph(_fontRef, charIndex, FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT);
+            if (glyphLoad)
+                break;
+            
+            //if (FT_Load_Char(_fontRef, theChar, FT_LOAD_RENDER | FT_LOAD_NO_AUTOHINT))
         }
 
         auto& metrics = _fontRef->glyph->metrics;

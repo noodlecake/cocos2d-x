@@ -71,6 +71,8 @@ public:
     
     unsigned char* getGlyphBitmap(uint64_t theChar, long &outWidth, long &outHeight, Rect &outRect,int &xAdvance);
     
+    bool isGlyphAvailable(uint64_t theChar);
+    
     int getFontAscender() const;
     const char* getFontFamily() const;
 
