@@ -317,13 +317,14 @@ bool Label::setCharMap(const std::string& plistFile)
 bool Label::initWithTTF(const std::string& text,
                         const std::string& fontFilePath, float fontSize,
                         const Size& dimensions,
-                        TextHAlignment /*hAlignment*/, TextVAlignment /*vAlignment*/)
+                        TextHAlignment /*hAlignment*/, TextVAlignment /*vAlignment*/,
+                        bool use_system_font)
 {
     if (FileUtils::getInstance()->isFileExist(fontFilePath))
     {
         TTFConfig ttfConfig(fontFilePath, fontSize, GlyphCollection::DYNAMIC);
         
-        bool swap_to_system_font = false;
+        bool swap_to_system_font = use_system_font;
         auto config_exists = FileUtils::getInstance()->isFileExist(ttfConfig.fontFilePath);
         auto atlas = FontAtlasCache::getFontAtlasTTF(&ttfConfig);
         
@@ -346,7 +347,7 @@ bool Label::initWithTTF(const std::string& text,
             setString(text);
         }
         else {
-            enableBold();
+            //enableBold();
             setSystemFontName(_systemFont); // todo actually get bold from ttconfig
             setSystemFontSize(fontSize); // todo actually get size from ttconfig
             setDimensions(dimensions.width, dimensions.height);
@@ -357,9 +358,9 @@ bool Label::initWithTTF(const std::string& text,
     return false;
 }
 
-bool Label::initWithTTF(const TTFConfig& ttfConfig, const std::string& text, TextHAlignment /*hAlignment*/, int maxLineWidth)
+bool Label::initWithTTF(const TTFConfig& ttfConfig, const std::string& text, TextHAlignment /*hAlignment*/, int maxLineWidth, bool use_system_font)
 {
-    bool swap_to_system_font = false;
+    bool swap_to_system_font = use_system_font;
     auto config_exists = FileUtils::getInstance()->isFileExist(ttfConfig.fontFilePath);
     auto atlas = FontAtlasCache::getFontAtlasTTF(&ttfConfig);
     
@@ -384,8 +385,8 @@ bool Label::initWithTTF(const TTFConfig& ttfConfig, const std::string& text, Tex
         return false;
     }
     else {
+        //enableBold(); // do this?
         setSystemFontName(_systemFont); // todo actually get bold from ttconfig
-        enableBold();
         setSystemFontSize(ttfConfig.fontSize); // todo actually get size from ttconfig
         setDimensions(0,0);
         setString(text);
@@ -529,7 +530,12 @@ void Label::reset()
     _outlineSize = 0.f;
     _bmFontPath = "";
     _systemFontDirty = false;
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_ANDROID)
+    _systemFont = "Noto Black";
+#else
     _systemFont = "Arial-BoldMT";
+    //_systemFont = "Arial-BoldItalicMT";
+#endif
     _systemFontSize = 12;
 
     if (_horizontalKernings)

@@ -609,10 +609,11 @@ CC_CONSTRUCTOR_ACCESS:
 
     bool initWithTTF(const std::string& text, const std::string& fontFilePath, float fontSize,
                      const Size& dimensions = Size::ZERO, TextHAlignment hAlignment = TextHAlignment::LEFT,
-                     TextVAlignment vAlignment = TextVAlignment::TOP);
+                     TextVAlignment vAlignment = TextVAlignment::TOP, bool use_system_font = false);
 
     bool initWithTTF(const TTFConfig& ttfConfig, const std::string& text,
-                     TextHAlignment hAlignment = TextHAlignment::LEFT, int maxLineWidth = 0);
+                     TextHAlignment hAlignment = TextHAlignment::LEFT, int maxLineWidth = 0, bool use_system_font = false);
+    
 
 protected:
     struct LetterInfo

@@ -145,7 +145,7 @@ static CGSize _calculateShrinkedSizeForString(NSAttributedString **str,
             *str = __attributedStringWithFontSize(mutableString, fontSize);
             
             CGSize fitSize = [*str boundingRectWithSize:CGSizeMake(constrainSize.width, MAX_MEASURE_HEIGHT)
-                                    options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                    options:(NSStringDrawingUsesLineFragmentOrigin)
                                     context:nil].size;
 
             if (fitSize.width == 0 || fitSize.height == 0) {
@@ -363,7 +363,7 @@ static CGSize _calculateStringSize(NSAttributedString *str, id font, CGSize *con
 
     CGSize dim;
     dim = [str boundingRectWithSize:CGSizeMake(textRect.width, textRect.height)
-                                 options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                 options:(NSStringDrawingUsesLineFragmentOrigin)
                             context:nil].size;
 
     dim.width = ceilf(dim.width);
@@ -439,6 +439,7 @@ static bool _initWithString(const char * text, cocos2d::Device::TextAlign align,
             realDimensions = _calculateStringSize(stringWithAttributes, font, &dimensions, enableWrap, overflow);
         }
 
+        
         
         CC_BREAK_IF(realDimensions.width <= 0 || realDimensions.height <= 0);
         if (dimensions.width <= 0) {
