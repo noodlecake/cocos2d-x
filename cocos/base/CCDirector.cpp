@@ -64,6 +64,14 @@ THE SOFTWARE.
 #include "base/ObjectFactory.h"
 #include "platform/CCApplication.h"
 
+
+#define TRACY_ENABLE 1
+#define TRACY_ON_DEMAND 1
+
+
+#include "../dependencies/ncgame/dependencies/tracy/Tracy.hpp"
+#include "../dependencies/ncgame/dependencies/tracy/common/TracySystem.hpp"
+
 #if CC_ENABLE_SCRIPT_BINDING
 #include "base/CCScriptSupport.h"
 #endif
@@ -286,6 +294,7 @@ void Director::setGLDefaultValues()
 // Draw the Scene
 void Director::drawScene()
 {
+    ZoneScopedNC("Director-drawScene", tracy::Color::PeachPuff1);
     // calculate "global" dt
     calculateDeltaTime();
     
@@ -297,6 +306,7 @@ void Director::drawScene()
     //tick before glClear: issue #533
     if (! _paused)
     {
+        ZoneScopedNC("Director-update", tracy::Color::PeachPuff2);
         _eventDispatcher->dispatchEvent(_eventBeforeUpdate);
         _scheduler->update(_deltaTime);
         _eventDispatcher->dispatchEvent(_eventAfterUpdate);
@@ -320,6 +330,7 @@ void Director::drawScene()
     
     if (_runningScene)
     {
+        ZoneScopedNC("Director-visit", tracy::Color::PeachPuff3);
 #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)
         _runningScene->stepPhysicsAndNavigation(_deltaTime);
 #endif
@@ -348,7 +359,10 @@ void Director::drawScene()
 #endif
     }
     
-    _renderer->render();
+    {
+        ZoneScopedNC("Director-render", tracy::Color::PeachPuff4);
+        _renderer->render();
+    }
 
     _eventDispatcher->dispatchEvent(_eventAfterDraw);
 
@@ -364,6 +378,7 @@ void Director::drawScene()
     // swap buffers
     if (_openGLView)
     {
+        ZoneScopedNC("Director-swapBuffers", tracy::Color::Honeydew1);
         _openGLView->swapBuffers();
     }
 
