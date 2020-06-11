@@ -65,8 +65,8 @@ THE SOFTWARE.
 #include "platform/CCApplication.h"
 
 
-#define TRACY_ENABLE 1
-#define TRACY_ON_DEMAND 1
+//#define TRACY_ENABLE 1
+//#define TRACY_ON_DEMAND 1
 
 
 #include "../dependencies/ncgame/dependencies/tracy/Tracy.hpp"
