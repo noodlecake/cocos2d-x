@@ -64,11 +64,8 @@ THE SOFTWARE.
 #include "base/ObjectFactory.h"
 #include "platform/CCApplication.h"
 
-
-//#define TRACY_ENABLE 1
-//#define TRACY_ON_DEMAND 1
-
-
+#include "../../dependencies/ncgame/src/nc/NC.pch"
+#include "../../dependencies/ncgame/dependencies/tracy/Tracy.hpp"
 #include "../dependencies/ncgame/dependencies/tracy/Tracy.hpp"
 #include "../dependencies/ncgame/dependencies/tracy/common/TracySystem.hpp"
 
