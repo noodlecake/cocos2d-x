@@ -309,8 +309,14 @@ void Director::drawScene()
         _eventDispatcher->dispatchEvent(_eventAfterUpdate);
     }
 
-    _renderer->clear();
-    experimental::FrameBuffer::clearAllFBOs();
+    {
+        ZoneScopedNC("Director-render-clear", tracy::Color::PeachPuff3);
+        _renderer->clear();
+    }
+    {
+        ZoneScopedNC("Director-render-clearAllFBOs", tracy::Color::PeachPuff4);
+        experimental::FrameBuffer::clearAllFBOs();
+    }
     
     _eventDispatcher->dispatchEvent(_eventBeforeDraw);
     
@@ -1523,6 +1529,7 @@ void Director::startAnimation(SetIntervalReason reason)
 
 void Director::mainLoop()
 {
+    ZoneScopedNC("Director-mainLoop", tracy::Color::Orchid1);
     if(_callback_hook)
     {
         _callback_hook();

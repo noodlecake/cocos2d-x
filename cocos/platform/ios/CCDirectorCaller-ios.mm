@@ -37,6 +37,11 @@
 #import "base/CCDirector.h"
 #import "platform/ios/CCEAGLView-ios.h"
 
+#include "../../dependencies/ncgame/src/nc/NC.pch"
+#include "../../dependencies/ncgame/dependencies/tracy/Tracy.hpp"
+#include "../dependencies/ncgame/dependencies/tracy/Tracy.hpp"
+#include "../dependencies/ncgame/dependencies/tracy/common/TracySystem.hpp"
+
 static id s_sharedDirectorCaller;
 
 @interface NSObject(CADisplayLink)
@@ -134,12 +139,16 @@ static id s_sharedDirectorCaller;
                       
 -(void) doCaller: (id) sender
 {
+    ZoneScopedNC("Director-doCaller", tracy::Color::OrangeRed);
     if (isAppActive) {
         cocos2d::Director* director = cocos2d::Director::getInstance();
         EAGLContext* cocos2dxContext = [(CCEAGLView*)director->getOpenGLView()->getEAGLView() context];
-        if (cocos2dxContext != [EAGLContext currentContext])
+        if (cocos2dxContext != [EAGLContext currentContext]) {
+            ZoneScopedNC("Director-doCaller-glFlush", tracy::Color::OrangeRed);
             glFlush();
+        }
         
+        ZoneScopedNC("Director-doCaller-set-loop", tracy::Color::OrangeRed);
         [EAGLContext setCurrentContext: cocos2dxContext];
 
         CFTimeInterval dt = ((CADisplayLink*)displayLink).timestamp - lastDisplayTime;
