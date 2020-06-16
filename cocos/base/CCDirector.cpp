@@ -26,6 +26,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ****************************************************************************/
 
+#ifndef DEBUG
+#define CC_STRIP_FPS 1
+#endif
 // cocos2d includes
 #include "base/CCDirector.h"
 
@@ -291,93 +294,112 @@ void Director::setGLDefaultValues()
 // Draw the Scene
 void Director::drawScene()
 {
-    ZoneScopedNC("Director-drawScene", tracy::Color::PeachPuff1);
-    // calculate "global" dt
-    calculateDeltaTime();
     
-    if (_openGLView)
-    {
-        _openGLView->pollEvents();
-    }
-
-    //tick before glClear: issue #533
-    if (! _paused)
-    {
-        ZoneScopedNC("Director-update", tracy::Color::PeachPuff2);
-        _eventDispatcher->dispatchEvent(_eventBeforeUpdate);
-        _scheduler->update(_deltaTime);
-        _eventDispatcher->dispatchEvent(_eventAfterUpdate);
-    }
-
-    {
-        ZoneScopedNC("Director-render-clear", tracy::Color::PeachPuff3);
-        _renderer->clear();
-    }
-    {
-        ZoneScopedNC("Director-render-clearAllFBOs", tracy::Color::PeachPuff4);
-        experimental::FrameBuffer::clearAllFBOs();
-    }
-    
-    _eventDispatcher->dispatchEvent(_eventBeforeDraw);
-    
-    /* to avoid flickr, nextScene MUST be here: after tick and before draw.
-     * FIXME: Which bug is this one. It seems that it can't be reproduced with v0.9
-     */
-    Node* node_to_release = NULL;
-    if (_nextScene)
-    {
-        node_to_release = setNextScene();
-    }
-
-    pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
-    
-    if (_runningScene)
-    {
-        ZoneScopedNC("Director-visit", tracy::Color::PeachPuff3);
-#if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)
-        _runningScene->stepPhysicsAndNavigation(_deltaTime);
-#endif
-        //clear draw stats
-        _renderer->clearDrawStats();
+        ZoneScopedNC("Director-drawScene", tracy::Color::PeachPuff1);
+        // calculate "global" dt
+        calculateDeltaTime();
         
-        //render the scene
-        if(_openGLView)
-            _openGLView->renderScene(_runningScene, _renderer);
         
-        _eventDispatcher->dispatchEvent(_eventAfterVisit);
-    }
-
-    // draw the notifications node
-    if (_notificationNode)
-    {
-        _notificationNode->visit(_renderer, Mat4::IDENTITY, 0);
-    }
-
-    updateFrameRate();
+        if (_openGLView)
+        {
+            _openGLView->pollEvents();
+        }
     
-    if (_displayStats)
-    {
-#if !CC_STRIP_FPS
-        showStats();
-#endif
-    }
+
+        //tick before glClear: issue #533
+        if (! _paused)
+        {
+            ZoneScopedNC("Director-update", tracy::Color::PeachPuff2);
+            
+            _eventDispatcher->dispatchEvent(_eventBeforeUpdate);
+            
+            
+            _scheduler->update(_deltaTime);
+            
+            
+            _eventDispatcher->dispatchEvent(_eventAfterUpdate);
+            
+        }
     
-    {
-        ZoneScopedNC("Director-render", tracy::Color::PeachPuff4);
-        _renderer->render();
-    }
+        
+        {
+            ZoneScopedNC("Director-render-clear", tracy::Color::PeachPuff3);
+            _renderer->clear();
+            
+        }
+    
+        {
+            ZoneScopedNC("Director-render-clearAllFBOs", tracy::Color::PeachPuff4);
+            experimental::FrameBuffer::clearAllFBOs(); // this takes a TON of TIME!!!!
+            
+        }
+        
+        _eventDispatcher->dispatchEvent(_eventBeforeDraw);
+        
+    
+        /* to avoid flickr, nextScene MUST be here: after tick and before draw.
+         * FIXME: Which bug is this one. It seems that it can't be reproduced with v0.9
+         */
+        Node* node_to_release = NULL;
+        if (_nextScene)
+        {
+            node_to_release = setNextScene();
+        }
 
-    _eventDispatcher->dispatchEvent(_eventAfterDraw);
+        pushMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+        
+        if (_runningScene)
+        {
+            
+            ZoneScopedNC("Director-visit", tracy::Color::PeachPuff3);
+    #if (CC_USE_PHYSICS || (CC_USE_3D_PHYSICS && CC_ENABLE_BULLET_INTEGRATION) || CC_USE_NAVMESH)
+            _runningScene->stepPhysicsAndNavigation(_deltaTime);
+    #endif
+            //clear draw stats
+            _renderer->clearDrawStats();
+            
+            //render the scene
+            if(_openGLView)
+                _openGLView->renderScene(_runningScene, _renderer);
+            
+            _eventDispatcher->dispatchEvent(_eventAfterVisit);
+        }
 
-    popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+        // draw the notifications node
+        
+        if (_notificationNode)
+        {
+            _notificationNode->visit(_renderer, Mat4::IDENTITY, 0);
+        }
+        
+
+        updateFrameRate();
+        
+        if (_displayStats)
+        {
+    #if !CC_STRIP_FPS
+            showStats();
+    #endif
+        }
+        
+        {
+            ZoneScopedNC("Director-render", tracy::Color::PeachPuff4);
+            _renderer->render();
+        }
+
+        _eventDispatcher->dispatchEvent(_eventAfterDraw);
+
+        popMatrix(MATRIX_STACK_TYPE::MATRIX_STACK_MODELVIEW);
+
+        
+        if(node_to_release) {
+            node_to_release->release();
+        }
+        
+        _totalFrames++;
 
     
-    if(node_to_release) {
-        node_to_release->release();
-    }
     
-    _totalFrames++;
-
     // swap buffers
     if (_openGLView)
     {
@@ -385,12 +407,14 @@ void Director::drawScene()
         _openGLView->swapBuffers();
     }
 
+    
     if (_displayStats)
     {
 #if !CC_STRIP_FPS
         calculateMPF();
 #endif
     }
+    
 }
 
 void Director::calculateDeltaTime()

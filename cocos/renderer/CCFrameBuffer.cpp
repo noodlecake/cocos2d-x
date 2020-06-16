@@ -329,7 +329,8 @@ void FrameBuffer::clearAllFBOs()
 {
     for (auto fbo : _frameBuffers)
     {
-        fbo->clearFBO();
+        if(fbo != _defaultFBO)
+            fbo->clearFBO();
     }
 }
 
