@@ -55,6 +55,7 @@ struct FontLetterDefinition
     int textureID;
     bool validDefinition;
     int xAdvance;
+    bool rotated;
 };
 
 class CC_DLL FontAtlas : public Ref
@@ -84,6 +85,8 @@ public:
     float getLineHeight() const { return _lineHeight; }
     void  setLineHeight(float newHeight);
     
+    std::string getFontName() const;
+
     Texture2D* getTexture(int slot);
     const Font* getFont() const { return _font; }
 

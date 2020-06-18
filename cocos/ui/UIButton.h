@@ -341,9 +341,10 @@ protected:
     void disabledTextureScaleChangedWithSize();
 
     virtual void adaptRenderers() override;
-    void updateTitleLocation();
+    virtual void updateTitleLocation();
     void updateContentSize();
-    void createTitleRenderer();
+    virtual void createTitleRenderer();
+    bool createTitleRendererIfNull();
 
     virtual Widget* createCloneInstance() override;
     virtual void copySpecialProperties(Widget* model) override;
@@ -393,6 +394,7 @@ private:
     int _fontSize;
     FontType _type;
     float _bmfontScale;
+
     std::string _fontName;
 };
 
