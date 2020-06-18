@@ -150,7 +150,13 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         
         if ([self respondsToSelector:@selector(setContentScaleFactor:)])
         {
-            self.contentScaleFactor = [[UIScreen mainScreen] scale];
+            float targetScale = [[UIScreen mainScreen] scale];
+            if(targetScale == 3.0) {
+                self.contentScaleFactor = 2.0;
+            }
+            else {
+                self.contentScaleFactor = [[UIScreen mainScreen] scale];
+            }
         }
     }
     

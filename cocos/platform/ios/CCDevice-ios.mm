@@ -293,6 +293,9 @@ int Device::getDPI()
         if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
             scale = [[UIScreen mainScreen] scale];
         }
+        if(cocos2d::Director::getInstance()->getOpenGLView()->getContentScaleFactor() < scale) {
+            scale = cocos2d::Director::getInstance()->getOpenGLView()->getContentScaleFactor();
+        }
 
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             dpi = 132 * scale;
