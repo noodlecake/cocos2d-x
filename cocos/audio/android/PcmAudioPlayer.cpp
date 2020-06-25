@@ -122,6 +122,14 @@ float PcmAudioPlayer::getVolume() const
     return _track->getVolume();
 }
 
+void PcmAudioPlayer::setPitch(float volume) {
+    _track->setPitch(volume);
+}
+
+float PcmAudioPlayer::getPitch() const {
+    return _track->getPitch();
+}
+
 void PcmAudioPlayer::setAudioFocus(bool isFocus)
 {
     _track->setAudioFocus(isFocus);

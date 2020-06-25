@@ -63,6 +63,9 @@ public:
     void setVolume(float volume);
     float getVolume() const;
 
+    void setPitch(float volume);
+    float getPitch() const;
+
     void setAudioFocus(bool isFocus);
 
     bool setPosition(float pos);
@@ -82,6 +85,12 @@ private:
     inline void setVolumeDirty(bool isDirty)
     { _isVolumeDirty = isDirty; };
 
+    inline bool isPitchDirty() const
+    { return _isPitchDirty; };
+
+    inline void setPitchDirty(bool isDirty)
+    { _isPitchDirty = isDirty; };
+
     inline bool isInitialized() const
     { return _isInitialized; };
 
@@ -96,6 +105,8 @@ private:
     int _name;
     float _volume;
     bool _isVolumeDirty;
+    float _pitch;
+    bool _isPitchDirty;
     std::mutex _volumeDirtyMutex;
     bool _isLoop;
     bool _isInitialized;

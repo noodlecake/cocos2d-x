@@ -69,6 +69,10 @@ public:
 
     virtual float getVolume() const = 0;
 
+    virtual void setPitch(float volume) {};
+
+    virtual float getPitch() const { return 1.0; };
+
     virtual void setAudioFocus(bool isFocus) = 0;
 
     virtual void setLoop(bool isLoop) = 0;

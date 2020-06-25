@@ -40,6 +40,8 @@ Track::Track(const PcmData &pcmData)
         , _name(-1)
         , _volume(1.0f)
         , _isVolumeDirty(true)
+        , _pitch(1.0f)
+        , _isPitchDirty(true)
         , _isLoop(false)
         , _isInitialized(false)
         , _isAudioFocus(true)
@@ -79,6 +81,21 @@ void Track::setVolume(float volume)
         _volume = volume;
         setVolumeDirty(true);
     }
+}
+
+float Track::getPitch() const
+{
+    return _pitch;
+}
+
+void Track::setPitch(float volume)
+{
+    //std::lock_guard<std::mutex> lk(_volumeDirtyMutex);
+    //if (fabs(_volume - volume) > 0.00001)
+    //{
+    _pitch = volume;
+    setPitchDirty(true);
+    //}
 }
 
 float Track::getVolume() const

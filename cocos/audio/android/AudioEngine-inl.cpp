@@ -245,7 +245,7 @@ void AudioEngineImpl::setAudioFocusForAllPlayers(bool isFocus)
     }
 }
 
-int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume)
+int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume, float pitch)
 {
     ALOGV("play2d, _audioPlayers.size=%d", (int)_audioPlayers.size());
     auto audioId = AudioEngine::INVALID_AUDIO_ID;
@@ -300,6 +300,8 @@ int AudioEngineImpl::play2d(const std::string &filePath ,bool loop ,float volume
 
             player->setLoop(loop);
             player->setVolume(volume);
+            // no pitch....
+            player->setPitch(pitch);
             player->setAudioFocus(__currentAudioFocus == AUDIOFOCUS_GAIN);
             player->play();
         } 
@@ -323,6 +325,16 @@ void AudioEngineImpl::setVolume(int audioID,float volume)
     {
         auto player = iter->second;
         player->setVolume(volume);
+    }
+}
+
+void AudioEngineImpl::setPitch(int audioID, float pitch)
+{
+    auto iter = _audioPlayers.find(audioID);
+    if (iter != _audioPlayers.end())
+    {
+        auto player = iter->second;
+        player->setPitch(pitch);
     }
 }
 
