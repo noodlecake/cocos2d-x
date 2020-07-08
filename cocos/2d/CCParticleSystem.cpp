@@ -998,21 +998,25 @@ void ParticleSystem::update(float dt)
         for (int i = 0 ; i < _particleCount; ++i)
         {
             _particleData.colorR[i] += _particleData.deltaColorR[i] * dt;
+            //_particleData.colorR[i] *= ((float)_realOpacity/255.0f);
         }
         
         for (int i = 0 ; i < _particleCount; ++i)
         {
-            _particleData.colorG[i] += _particleData.deltaColorG[i] * dt;
+            _particleData.colorG[i] += _particleData.deltaColorG[i] * dt * ((float)_realOpacity/255.0f);
+            //_particleData.colorG[i] *= ((float)_realOpacity/255.0f);
         }
         
         for (int i = 0 ; i < _particleCount; ++i)
         {
-            _particleData.colorB[i] += _particleData.deltaColorB[i] * dt;
+            _particleData.colorB[i] += _particleData.deltaColorB[i] * dt * ((float)_realOpacity/255.0f);
+            //_particleData.colorB[i] *= ((float)_realOpacity/255.0f);
         }
         
         for (int i = 0 ; i < _particleCount; ++i)
         {
-            _particleData.colorA[i] += _particleData.deltaColorA[i] * dt;
+            _particleData.colorA[i] += _particleData.deltaColorA[i] * dt * ((float)_realOpacity/255.0f);
+            _particleData.colorA[i] *= ((float)_realOpacity/255.0f);
         }
         //size
         for (int i = 0 ; i < _particleCount; ++i)
