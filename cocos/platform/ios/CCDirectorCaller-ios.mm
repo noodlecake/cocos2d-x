@@ -38,6 +38,8 @@
 #import "platform/ios/CCEAGLView-ios.h"
 
 static id s_sharedDirectorCaller;
+dispatch_queue_t _queue;
+
 
 @interface NSObject(CADisplayLink)
 +(id) displayLinkWithTarget: (id)arg1 selector:(SEL)arg2;
@@ -55,6 +57,7 @@ static id s_sharedDirectorCaller;
     if (s_sharedDirectorCaller == nil)
     {
         s_sharedDirectorCaller = [[CCDirectorCaller alloc] init];
+        _queue = dispatch_queue_create("CCDirectorCallerIOS", DISPATCH_QUEUE_SERIAL);
     }
     
     return s_sharedDirectorCaller;
@@ -146,7 +149,7 @@ static id s_sharedDirectorCaller;
         CFTimeInterval dt = ((CADisplayLink*)displayLink).timestamp - lastDisplayTime;
         lastDisplayTime = ((CADisplayLink*)displayLink).timestamp;
         // Can we get crash reports here?
-        dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        dispatch_sync(_queue, ^{
             director->mainLoop(dt);
         });
     }
