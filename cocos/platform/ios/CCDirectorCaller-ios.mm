@@ -134,6 +134,7 @@ static id s_sharedDirectorCaller;
                       
 -(void) doCaller: (id) sender
 {
+    
     if (isAppActive) {
         cocos2d::Director* director = cocos2d::Director::getInstance();
         EAGLContext* cocos2dxContext = [(CCEAGLView*)director->getOpenGLView()->getEAGLView() context];
@@ -144,7 +145,10 @@ static id s_sharedDirectorCaller;
 
         CFTimeInterval dt = ((CADisplayLink*)displayLink).timestamp - lastDisplayTime;
         lastDisplayTime = ((CADisplayLink*)displayLink).timestamp;
-        director->mainLoop(dt);
+        // Can we get crash reports here?
+        dispatch_sync(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+            director->mainLoop(dt);
+        });
     }
 }
 
