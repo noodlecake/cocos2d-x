@@ -83,6 +83,41 @@ GLViewImpl* GLViewImpl::createWithFullScreen(const std::string& viewName)
     return nullptr;
 }
 
+Rect GLViewImpl::getSafeAreaRect() const
+{
+    Rect safeAreaRect = GLView::getSafeAreaRect();
+
+    bool isCutoutEnabled = JniHelper::callStaticBooleanMethod("org/cocos2dx/lib/Cocos2dxHelper", "isCutoutEnabled");
+    if (isCutoutEnabled) {
+        // screen with enabled cutout area (ex. Google Pixel 3 XL, Huawei P20, Asus ZenFone 5, etc)
+        static int* safeInsets = JniHelper::callStaticIntArrayMethod("org/cocos2dx/lib/Cocos2dxHelper", "getSafeInsets");
+        if (safeInsets != nullptr) {
+            float safeInsetBottom = safeInsets[0] / _scaleY;
+            float safeInsetLeft = safeInsets[1] / _scaleX;
+            float safeInsetRight = safeInsets[2] / _scaleX;
+            float safeInsetTop = safeInsets[3] / _scaleY;
+
+            // fit safe area rect with safe insets
+            if (safeInsetBottom > 0) {
+                safeAreaRect.origin.y += safeInsetBottom;
+                safeAreaRect.size.height -= safeInsetBottom;
+            }
+            if (safeInsetLeft > 0) {
+                safeAreaRect.origin.x += safeInsetLeft;
+                safeAreaRect.size.width -= safeInsetLeft;
+            }
+            if (safeInsetRight > 0) {
+                safeAreaRect.size.width -= safeInsetRight;
+            }
+            if (safeInsetTop > 0) {
+                safeAreaRect.size.height -= safeInsetTop;
+            }
+        }
+    }
+
+    return safeAreaRect;
+}
+
 GLViewImpl::GLViewImpl()
 {
     initExtensions();
