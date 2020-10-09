@@ -261,7 +261,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 
 - (void) layoutSubviews
 {
-    if (!cocos2d::Director::getInstance()->isValid())
+    static bool hasLayedOut = false;
+    if (!cocos2d::Director::getInstance()->isValid() || hasLayedOut)
     {
         return;
     }
