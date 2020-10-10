@@ -267,6 +267,8 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         return;
     }
     
+    hasLayedOut = true;
+    
     [renderer_ resizeFromLayer:(CAEAGLLayer*)self.layer];
     size_ = [renderer_ backingSize];
 
